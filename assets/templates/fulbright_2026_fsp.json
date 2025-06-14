@@ -1,0 +1,123 @@
+{
+  "templateId": "fulbright_2026_fsp",
+  "version": 1,
+  "lastUpdated": "2025-06-14",
+  "scholarshipName": "Fulbright Foreign Student Program 2026",
+  "provider": "U.S. Department of State / AMINEF",
+  "description": "Beasiswa penuh untuk studi S2 dan S3 di universitas-universitas di Amerika Serikat bagi WNI.",
+  "level": ["S2", "S3"],
+  "fundingType": "Full",
+  "tags": ["Pemerintah AS", "Internasional", "Graduate", "Academic Excellence"],
+  "officialLinks": [
+    { "title": "Fulbright Indonesia (AMINEF)", "url": "https://www.aminef.or.id/" },
+    { "title": "Fulbright FSP Guidelines 2026", "url": "https://www.aminef.or.id/guidelines_fsp_2026.pdf" }
+  ],
+
+  "requiredDocuments": [
+    {
+      "id": "passport_scan",
+      "title": "Scan Paspor (halaman identitas)",
+      "notes": "Paspor masih berlaku minimum 18 bulan sejak batas akhir pendaftaran.",
+      "commonDocumentId": "passport"
+    },
+    {
+      "id": "cv",
+      "title": "Curriculum Vitae",
+      "notes": "Gunakan format Fulbright (maks. 4 halaman).",
+      "commonDocumentId": "cv"
+    }
+  ],
+
+  "structuredRequirements": [
+    {
+      "type": "gpa",
+      "value": "3.00",
+      "condition": "minimum",
+      "description": "IPK kumulatif minimal 3.00 (skala 4.00) untuk S1."
+    },
+    {
+      "type": "age",
+      "value": "35",
+      "condition": "maximum",
+      "description": "Usia maksimal 35 tahun pada 1 Februari 2026 untuk pelamar S2."
+    },
+    {
+      "type": "language_test",
+      "value": "IELTS ≥ 6.5 atau TOEFL iBT ≥ 79",
+      "condition": "required",
+      "description": "Sertifikat Bahasa Inggris masih berlaku per 1 Oktober 2025."
+    }
+  ],
+
+  "stages": [
+    {
+      "order": 1,
+      "stageType": "administrasi",
+      "stageName": "1. Application Submission",
+      "description": "Unggah formulir aplikasi lengkap beserta dokumen pendukung.",
+      "keyDates": { "startDaysBeforeDeadline": 90, "endDaysBeforeDeadline": 0 },
+      "documents": [
+        {
+          "id": "transcript",
+          "title": "Transkrip Nilai S1/S2",
+          "notes": "Scan berwarna, terlegalisir.",
+          "commonDocumentId": "transkrip"
+        },
+        {
+          "id": "recommendation_letters",
+          "title": "2 Surat Rekomendasi",
+          "notes": "Diunggah langsung oleh pemberi rekomendasi melalui portal.",
+          "commonDocumentId": "letter_recommendation"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "draft_personal_statement",
+          "title": "Selesaikan Personal Statement",
+          "description": "Revisi bersama mentor hingga final.",
+          "dueDaysBeforeDeadline": 21
+        },
+        {
+          "id": "contact_recommenders",
+          "title": "Hubungi Recommenders",
+          "description": "Pastikan mereka memahami tenggat & format surat.",
+          "dueDaysBeforeDeadline": 28
+        }
+      ]
+    },
+
+    {
+      "order": 2,
+      "stageType": "tes",
+      "stageName": "2. English Proficiency Verification",
+      "description": "Validasi skor TOEFL iBT / IELTS.",
+      "keyDates": { "startDaysAfterDeadline": 10, "endDaysAfterDeadline": 30 },
+      "documents": [ ],
+      "tasks": [
+        {
+          "id": "upload_ielts_score",
+          "title": "Upload Sertifikat IELTS/TOEFL",
+          "description": "Pastikan file < 2 MB, format PDF.",
+          "dueDaysBeforeDeadline": -5
+        }
+      ]
+    },
+
+    {
+      "order": 3,
+      "stageType": "wawancara",
+      "stageName": "3. Interview & Final Selection",
+      "description": "Wawancara panel Fulbright dan tes kesehatan.",
+      "keyDates": { "startDaysAfterDeadline": 45, "endDaysAfterDeadline": 60 },
+      "documents": [],
+      "tasks": [
+        {
+          "id": "mock_interview",
+          "title": "Latihan Mock Interview",
+          "description": "Simulasi dengan alumni Fulbright.",
+          "dueDaysBeforeDeadline": -40
+        }
+      ]
+    }
+  ]
+}

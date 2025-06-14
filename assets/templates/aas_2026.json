@@ -1,0 +1,123 @@
+{
+  "templateId": "aas_2026",
+  "version": 1,
+  "lastUpdated": "2025-06-14",
+  "scholarshipName": "Australia Awards Scholarships 2026",
+  "provider": "Department of Foreign Affairs and Trade (DFAT) – Australia",
+  "description": "Beasiswa penuh bagi WNI untuk program S2 dan S3 di universitas Australia, meliputi biaya kuliah, tunjangan hidup, dan tiket pesawat.",
+  "level": ["S2", "S3"],
+  "fundingType": "Full",
+  "tags": ["Pemerintah AU", "Internasional", "Development Focus"],
+  "officialLinks": [
+    { "title": "AAS Indonesia", "url": "https://www.australiaawardsindonesia.org/" },
+    { "title": "Panduan Aplikasi 2026", "url": "https://www.australiaawardsindonesia.org/guide_2026.pdf" }
+  ],
+
+  "requiredDocuments": [
+    {
+      "id": "ktp",
+      "title": "Scan KTP",
+      "notes": "Format PDF, maksimum 1 MB.",
+      "commonDocumentId": "ktp"
+    },
+    {
+      "id": "statement_purpose",
+      "title": "Development Impact & Study Plan",
+      "notes": "Essai 2 halaman, font 11 pt.",
+      "commonDocumentId": "statement_purpose"
+    }
+  ],
+
+  "structuredRequirements": [
+    {
+      "type": "gpa",
+      "value": "2.75",
+      "condition": "minimum",
+      "description": "IPK minimal 2.75 (skala 4.0) untuk wilayah umum; 2.60 untuk area 3T."
+    },
+    {
+      "type": "age",
+      "value": "42",
+      "condition": "maximum",
+      "description": "Usia maksimal 42 tahun pada tanggal penutupan pendaftaran."
+    },
+    {
+      "type": "language_test",
+      "value": "IELTS ≥ 6.5 (no band < 6.0)",
+      "condition": "required",
+      "description": "Skor bahasa Inggris valid hingga 1 Jan 2026."
+    }
+  ],
+
+  "stages": [
+    {
+      "order": 1,
+      "stageType": "administrasi",
+      "stageName": "1. Online Application",
+      "description": "Unggah berkas dan lengkapi formulir di OASIS.",
+      "keyDates": { "startDaysBeforeDeadline": 120, "endDaysBeforeDeadline": 0 },
+      "documents": [
+        {
+          "id": "transcript_and_diploma",
+          "title": "Transkrip & Ijazah",
+          "notes": "Scan terlegalisir, terjemahan resmi jika non-Inggris.",
+          "commonDocumentId": "transkrip"
+        },
+        {
+          "id": "english_test_report",
+          "title": "IELTS/TOEFL/TOEIC Report",
+          "notes": "Unggah dalam satu file PDF.",
+          "commonDocumentId": "test_score"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "build_cv_aas_format",
+          "title": "Siapkan CV Format AAS",
+          "description": "Ikuti template resmi (maks. 3 halaman).",
+          "dueDaysBeforeDeadline": 60
+        },
+        {
+          "id": "submit_online_form",
+          "title": "Submit Formulir Online",
+          "description": "Klik ‘Submit’ setelah semua kolom hijau.",
+          "dueDaysBeforeDeadline": 0
+        }
+      ]
+    },
+
+    {
+      "order": 2,
+      "stageType": "tes",
+      "stageName": "2. IELTS Re-test (Jika diperlukan)",
+      "description": "Peserta yang skor IELTS-nya mendekati batas akan diminta re-test.",
+      "keyDates": { "startDaysAfterDeadline": 20, "endDaysAfterDeadline": 40 },
+      "documents": [],
+      "tasks": [
+        {
+          "id": "book_ielts_test",
+          "title": "Booking Ulang IELTS",
+          "description": "Pilih test center IDP atau British Council.",
+          "dueDaysBeforeDeadline": -15
+        }
+      ]
+    },
+
+    {
+      "order": 3,
+      "stageType": "wawancara",
+      "stageName": "3. Interview & Medical Check",
+      "description": "Panel interview + pemeriksaan kesehatan menyeluruh.",
+      "keyDates": { "startDaysAfterDeadline": 60, "endDaysAfterDeadline": 90 },
+      "documents": [],
+      "tasks": [
+        {
+          "id": "medical_exam",
+          "title": "Jadwalkan Medical Exam",
+          "description": "RS panel DFAT; kirim hasil via eMedical.",
+          "dueDaysBeforeDeadline": -70
+        }
+      ]
+    }
+  ]
+}
