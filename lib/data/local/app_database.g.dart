@@ -1570,9 +1570,9 @@ class $RequirementsTable extends Requirements
   late final GeneratedColumn<int> stageId = GeneratedColumn<int>(
     'stage_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES stages (id)',
     ),
@@ -1623,8 +1623,6 @@ class $RequirementsTable extends Requirements
         _stageIdMeta,
         stageId.isAcceptableOrUnknown(data['stage_id']!, _stageIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_stageIdMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -1656,7 +1654,7 @@ class $RequirementsTable extends Requirements
       stageId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}stage_id'],
-      )!,
+      ),
       title: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}title'],
@@ -1676,12 +1674,12 @@ class $RequirementsTable extends Requirements
 
 class Requirement extends DataClass implements Insertable<Requirement> {
   final int id;
-  final int stageId;
+  final int? stageId;
   final String title;
   final bool isChecked;
   const Requirement({
     required this.id,
-    required this.stageId,
+    this.stageId,
     required this.title,
     required this.isChecked,
   });
@@ -1689,7 +1687,9 @@ class Requirement extends DataClass implements Insertable<Requirement> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['stage_id'] = Variable<int>(stageId);
+    if (!nullToAbsent || stageId != null) {
+      map['stage_id'] = Variable<int>(stageId);
+    }
     map['title'] = Variable<String>(title);
     map['is_checked'] = Variable<bool>(isChecked);
     return map;
@@ -1698,7 +1698,9 @@ class Requirement extends DataClass implements Insertable<Requirement> {
   RequirementsCompanion toCompanion(bool nullToAbsent) {
     return RequirementsCompanion(
       id: Value(id),
-      stageId: Value(stageId),
+      stageId: stageId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stageId),
       title: Value(title),
       isChecked: Value(isChecked),
     );
@@ -1711,7 +1713,7 @@ class Requirement extends DataClass implements Insertable<Requirement> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Requirement(
       id: serializer.fromJson<int>(json['id']),
-      stageId: serializer.fromJson<int>(json['stageId']),
+      stageId: serializer.fromJson<int?>(json['stageId']),
       title: serializer.fromJson<String>(json['title']),
       isChecked: serializer.fromJson<bool>(json['isChecked']),
     );
@@ -1721,7 +1723,7 @@ class Requirement extends DataClass implements Insertable<Requirement> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'stageId': serializer.toJson<int>(stageId),
+      'stageId': serializer.toJson<int?>(stageId),
       'title': serializer.toJson<String>(title),
       'isChecked': serializer.toJson<bool>(isChecked),
     };
@@ -1729,12 +1731,12 @@ class Requirement extends DataClass implements Insertable<Requirement> {
 
   Requirement copyWith({
     int? id,
-    int? stageId,
+    Value<int?> stageId = const Value.absent(),
     String? title,
     bool? isChecked,
   }) => Requirement(
     id: id ?? this.id,
-    stageId: stageId ?? this.stageId,
+    stageId: stageId.present ? stageId.value : this.stageId,
     title: title ?? this.title,
     isChecked: isChecked ?? this.isChecked,
   );
@@ -1772,7 +1774,7 @@ class Requirement extends DataClass implements Insertable<Requirement> {
 
 class RequirementsCompanion extends UpdateCompanion<Requirement> {
   final Value<int> id;
-  final Value<int> stageId;
+  final Value<int?> stageId;
   final Value<String> title;
   final Value<bool> isChecked;
   const RequirementsCompanion({
@@ -1783,11 +1785,10 @@ class RequirementsCompanion extends UpdateCompanion<Requirement> {
   });
   RequirementsCompanion.insert({
     this.id = const Value.absent(),
-    required int stageId,
+    this.stageId = const Value.absent(),
     required String title,
     this.isChecked = const Value.absent(),
-  }) : stageId = Value(stageId),
-       title = Value(title);
+  }) : title = Value(title);
   static Insertable<Requirement> custom({
     Expression<int>? id,
     Expression<int>? stageId,
@@ -1804,7 +1805,7 @@ class RequirementsCompanion extends UpdateCompanion<Requirement> {
 
   RequirementsCompanion copyWith({
     Value<int>? id,
-    Value<int>? stageId,
+    Value<int?>? stageId,
     Value<String>? title,
     Value<bool>? isChecked,
   }) {
@@ -3250,14 +3251,14 @@ typedef $$TasksTableProcessedTableManager =
 typedef $$RequirementsTableCreateCompanionBuilder =
     RequirementsCompanion Function({
       Value<int> id,
-      required int stageId,
+      Value<int?> stageId,
       required String title,
       Value<bool> isChecked,
     });
 typedef $$RequirementsTableUpdateCompanionBuilder =
     RequirementsCompanion Function({
       Value<int> id,
-      Value<int> stageId,
+      Value<int?> stageId,
       Value<String> title,
       Value<bool> isChecked,
     });
@@ -3270,9 +3271,9 @@ final class $$RequirementsTableReferences
     $_aliasNameGenerator(db.requirements.stageId, db.stages.id),
   );
 
-  $$StagesTableProcessedTableManager get stageId {
-    final $_column = $_itemColumn<int>('stage_id')!;
-
+  $$StagesTableProcessedTableManager? get stageId {
+    final $_column = $_itemColumn<int>('stage_id');
+    if ($_column == null) return null;
     final manager = $$StagesTableTableManager(
       $_db,
       $_db.stages,
@@ -3452,7 +3453,7 @@ class $$RequirementsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> stageId = const Value.absent(),
+                Value<int?> stageId = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<bool> isChecked = const Value.absent(),
               }) => RequirementsCompanion(
@@ -3464,7 +3465,7 @@ class $$RequirementsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required int stageId,
+                Value<int?> stageId = const Value.absent(),
                 required String title,
                 Value<bool> isChecked = const Value.absent(),
               }) => RequirementsCompanion.insert(

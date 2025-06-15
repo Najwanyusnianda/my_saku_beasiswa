@@ -8,9 +8,11 @@ import '../../../../core/providers.dart';
 import '../../../../data/local/app_database.dart';
 
 
+
 //import step form
 import 'step_template_select.dart';
 import 'step_info_basic.dart';
+import 'step_requirements.dart';
 class AddEditScholarshipWizard extends ConsumerStatefulWidget {
   const AddEditScholarshipWizard({super.key});
 
@@ -33,12 +35,23 @@ class _AddEditScholarshipWizardState
     final form = ref.read(addScholarshipFormProvider);
     final dao  = ref.read(scholarshipDaoProvider);
 
+    // insert scholarship
     await dao.insertScholarship(ScholarshipsCompanion.insert(
       name: form.name,
       provider: form.provider,
       deadline: form.deadline!,
       templateId: Value(form.templateId),
     ));
+
+    // insert requirements
+      // 2. insert requirements
+    final reqRows = form.requirements
+        .map((txt) => RequirementsCompanion.insert(
+              stageId: const Value.absent(), // global
+              title: txt,
+            ))
+        .toList();
+    await dao.insertRequirements(reqRows);
     if (mounted) Navigator.pop(context); // kembali Dashboard
   }
 
@@ -53,7 +66,7 @@ class _AddEditScholarshipWizardState
 
   @override
   Widget build(BuildContext context) {
-    final titles = ['Pilih Template', 'Info Dasar', 'Persyaratan', 'Tahapan', 'Simpan'];
+    final titles = ['Pilih Template','Info Dasar', 'Persyaratan','Tahapan','Simpan'];
     return Scaffold(
       appBar: AppBar(title: Text('${titles[_page]} (${_page + 1}/5)')),
       body: PageView(
@@ -62,7 +75,7 @@ class _AddEditScholarshipWizardState
         children: [
           StepTemplateSelect(onNext: _next),
           StepInfoBasic(onNext: _save), // untuk v1, selesai di sini
-          const Placeholder(),          // Step 3–5 nanti
+          StepRequirements(onNext: _save),     // Step 3–5 nanti
           const Placeholder(),
           const Placeholder(),
         ],

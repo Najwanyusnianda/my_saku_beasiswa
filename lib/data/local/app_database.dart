@@ -62,10 +62,16 @@ class Tasks extends Table {
 // 5. requirements (checklist)
 class Requirements extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get stageId => integer().references(Stages, #id)();
+
+  // Ubah dari integer() menjadi integer().nullable()
+  IntColumn get stageId =>
+      integer().nullable().references(Stages, #id)();
+
   TextColumn get title => text()();
-  BoolColumn get isChecked => boolean().withDefault(const Constant(false))();
+  BoolColumn get isChecked =>
+      boolean().withDefault(const Constant(false))();
 }
+
 
 /* ───────────────*/
 /*  DATABASE ROOT  */

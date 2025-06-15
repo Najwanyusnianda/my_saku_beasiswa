@@ -23,6 +23,11 @@ final router = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/dashboard',
   routes: [
+    GoRoute(// add new scholarship
+          path: '/add',
+          pageBuilder: (c, s) =>
+              MaterialPage(child: const AddEditScholarshipWizard()),
+        ),
     ShellRoute(
       builder: (context, state, child) => MainScaffold(child: child),
       routes: [
@@ -30,6 +35,7 @@ final router = GoRouter(
           path: '/dashboard',
           pageBuilder: (c, s) => NoTransitionPage(child: const DashboardScreen()),
         ),
+
         GoRoute(
           path: '/scholarships',
           pageBuilder: (c, s) => NoTransitionPage(child: const ScholarshipListScreen()),
@@ -42,11 +48,7 @@ final router = GoRouter(
           path: '/settings',
           pageBuilder: (c, s) => NoTransitionPage(child: const SettingsScreen()),
         ),
-        GoRoute(
-          path: '/add',
-          pageBuilder: (c, s) =>
-              MaterialPage(child: const AddEditScholarshipWizard()),
-        ),
+
       ],
     ),
   ],

@@ -12,7 +12,7 @@ class ScholarshipDao extends DatabaseAccessor<AppDatabase>
   Stream<List<Scholarship>> watchAll() =>
       select(scholarships).watch();
 
-  // INSERT
+  // INSERT Scholarship
   Future<int> insertScholarship(ScholarshipsCompanion data) =>
       into(scholarships).insert(data);
 
@@ -21,5 +21,11 @@ class ScholarshipDao extends DatabaseAccessor<AppDatabase>
       (update(scholarships)..where((tbl) => tbl.id.equals(id)))
           .write(ScholarshipsCompanion(status: Value(status)));
   
+    // insert requirements
+  Future<void> insertRequirements(List<RequirementsCompanion> rows) async {
+    if (rows.isEmpty) return;
+    await batch((b) => b.insertAll(requirements, rows));
+}
+
   
 }

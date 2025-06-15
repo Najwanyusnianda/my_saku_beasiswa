@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../application/dashboard_counts_provider.dart';
 import '../application/dashboard_templates_count_provider.dart';
 import '../../../../core/providers.dart'; // pastikan provider scholarshipDaoProvider ada di sini
 
-// Tambahkan provider nearestDeadlineProvider jika belum didefinisikan di tempat lain
 final nearestDeadlineProvider = StreamProvider<DateTime?>((ref) {
   final dao = ref.watch(scholarshipDaoProvider);
   return dao.watchAll().map((l) {
@@ -35,13 +35,13 @@ class DashboardScreen extends ConsumerWidget {
               loading: () => const CircularProgressIndicator(),
               error: (e, _) => Text('Err $e'),
             ),
-            const SizedBox(height: 20), // Spacing between widgets
+            const SizedBox(height: 20),
             templateCountAsync.when(
               data: (count) => Text('$count templates'),
               loading: () => const CircularProgressIndicator(),
               error: (e, _) => Text('Template Error: $e'),
             ),
-            const SizedBox(height: 20), // Spacing tambahan untuk deadline
+            const SizedBox(height: 20),
             deadlineAsync.when(
               data: (deadline) => Text(
                 deadline != null
@@ -55,7 +55,7 @@ class DashboardScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, '/add'),
+        onPressed: () => context.push('/add'),
         child: const Icon(Icons.add),
       ),
     );

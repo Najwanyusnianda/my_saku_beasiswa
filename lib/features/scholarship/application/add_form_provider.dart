@@ -24,6 +24,16 @@ class AddScholarshipFormNotifier extends StateNotifier<AddScholarshipForm> {
   void setName(String v) => state = state..name = v;
   void setProvider(String v) => state = state..provider = v;
   void setDeadline(DateTime d) => state = state..deadline = d;
+
+  void addRequirement(String text) {
+    if (text.trim().isEmpty) return;
+    state = state..requirements = [...state.requirements, text.trim()];
+  }
+
+  void removeRequirementAt(int idx) {
+    final list = [...state.requirements]..removeAt(idx);
+    state = state..requirements = list;
+  }
 }
 
 extension AddFormX on AddScholarshipForm {
@@ -32,3 +42,5 @@ extension AddFormX on AddScholarshipForm {
       provider.trim().isNotEmpty &&
       deadline != null;
 }
+
+

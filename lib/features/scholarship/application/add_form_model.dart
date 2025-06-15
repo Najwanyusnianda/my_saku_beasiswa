@@ -3,4 +3,6 @@ class AddScholarshipForm {
   String name = '';
   String provider = '';
   DateTime? deadline;
+  List<String> requirements = [];
 }
+
