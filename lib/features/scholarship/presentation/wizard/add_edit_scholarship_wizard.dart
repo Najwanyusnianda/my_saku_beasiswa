@@ -69,16 +69,21 @@ class _AddEditScholarshipWizardState
     final titles = ['Pilih Template','Info Dasar', 'Persyaratan','Tahapan','Simpan'];
     return Scaffold(
       appBar: AppBar(title: Text('${titles[_page]} (${_page + 1}/5)')),
-      body: PageView(
-        controller: _pageCtrl,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          StepTemplateSelect(onNext: _next),
-          StepInfoBasic(onNext: _save), // untuk v1, selesai di sini
-          StepRequirements(onNext: _save),     // Step 3–5 nanti
-          const Placeholder(),
-          const Placeholder(),
-        ],
+      body: SafeArea( // Bungkus dengan SafeArea
+        child: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 16),
+          child: PageView(
+            controller: _pageCtrl,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              StepTemplateSelect(onNext: _next),
+              StepInfoBasic(onNext: _next), // untuk v1, selesai di sini
+              StepRequirements(onNext: _save), // Step 3–5 nanti
+              const Placeholder(),
+              const Placeholder(),
+            ],
+          ),
+        ),
       ),
     );
   }
