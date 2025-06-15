@@ -27,5 +27,28 @@ class ScholarshipDao extends DatabaseAccessor<AppDatabase>
     await batch((b) => b.insertAll(requirements, rows));
 }
 
+  // insert stages and tasks
+  Future<void> insertStages(List<StagesCompanion> rows) async {
+    if (rows.isEmpty) return;
+    await batch((b) => b.insertAll(stages, rows));
+  }
+
+  Future<void> insertTasks(List<TasksCompanion> rows) async {
+    if (rows.isEmpty) return;
+    await batch((b) => b.insertAll(tasks, rows));
+  }
+
+  Future<List<int>> insertStagesReturnIds(List<StagesCompanion> rows) async {
+    final ids = <int>[];
+    await transaction(() async {
+      for (final row in rows) {
+        final id = await into(stages).insert(row); // ← selalu mengembalikan id
+        ids.add(id);
+      }
+    });
+    return ids;
+  }
+
+
   
 }

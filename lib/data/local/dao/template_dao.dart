@@ -6,7 +6,7 @@ part 'template_dao.g.dart';
 @DriftAccessor(tables: [CachedTemplates])
 class TemplateDao extends DatabaseAccessor<AppDatabase>
     with _$TemplateDaoMixin {
-  TemplateDao(AppDatabase db) : super(db);
+  TemplateDao(super.db);
 
   // --- method yang memang sudah ada ---
   Future<void> upsert(List<CachedTemplatesCompanion> rows) async {

@@ -1189,14 +1189,16 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  static const VerificationMeta _relativeDaysMeta = const VerificationMeta(
+    'relativeDays',
+  );
   @override
-  late final GeneratedColumn<String> note = GeneratedColumn<String>(
-    'note',
+  late final GeneratedColumn<int> relativeDays = GeneratedColumn<int>(
+    'relative_days',
     aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _dueDateMeta = const VerificationMeta(
     'dueDate',
@@ -1227,7 +1229,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     id,
     stageId,
     title,
-    note,
+    relativeDays,
     dueDate,
     isDone,
   ];
@@ -1262,11 +1264,16 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
-    if (data.containsKey('note')) {
+    if (data.containsKey('relative_days')) {
       context.handle(
-        _noteMeta,
-        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+        _relativeDaysMeta,
+        relativeDays.isAcceptableOrUnknown(
+          data['relative_days']!,
+          _relativeDaysMeta,
+        ),
       );
+    } else if (isInserting) {
+      context.missing(_relativeDaysMeta);
     }
     if (data.containsKey('due_date')) {
       context.handle(
@@ -1301,10 +1308,10 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
-      note: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}note'],
-      ),
+      relativeDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}relative_days'],
+      )!,
       dueDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}due_date'],
@@ -1326,14 +1333,14 @@ class Task extends DataClass implements Insertable<Task> {
   final int id;
   final int stageId;
   final String title;
-  final String? note;
+  final int relativeDays;
   final DateTime? dueDate;
   final bool isDone;
   const Task({
     required this.id,
     required this.stageId,
     required this.title,
-    this.note,
+    required this.relativeDays,
     this.dueDate,
     required this.isDone,
   });
@@ -1343,9 +1350,7 @@ class Task extends DataClass implements Insertable<Task> {
     map['id'] = Variable<int>(id);
     map['stage_id'] = Variable<int>(stageId);
     map['title'] = Variable<String>(title);
-    if (!nullToAbsent || note != null) {
-      map['note'] = Variable<String>(note);
-    }
+    map['relative_days'] = Variable<int>(relativeDays);
     if (!nullToAbsent || dueDate != null) {
       map['due_date'] = Variable<DateTime>(dueDate);
     }
@@ -1358,7 +1363,7 @@ class Task extends DataClass implements Insertable<Task> {
       id: Value(id),
       stageId: Value(stageId),
       title: Value(title),
-      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      relativeDays: Value(relativeDays),
       dueDate: dueDate == null && nullToAbsent
           ? const Value.absent()
           : Value(dueDate),
@@ -1375,7 +1380,7 @@ class Task extends DataClass implements Insertable<Task> {
       id: serializer.fromJson<int>(json['id']),
       stageId: serializer.fromJson<int>(json['stageId']),
       title: serializer.fromJson<String>(json['title']),
-      note: serializer.fromJson<String?>(json['note']),
+      relativeDays: serializer.fromJson<int>(json['relativeDays']),
       dueDate: serializer.fromJson<DateTime?>(json['dueDate']),
       isDone: serializer.fromJson<bool>(json['isDone']),
     );
@@ -1387,7 +1392,7 @@ class Task extends DataClass implements Insertable<Task> {
       'id': serializer.toJson<int>(id),
       'stageId': serializer.toJson<int>(stageId),
       'title': serializer.toJson<String>(title),
-      'note': serializer.toJson<String?>(note),
+      'relativeDays': serializer.toJson<int>(relativeDays),
       'dueDate': serializer.toJson<DateTime?>(dueDate),
       'isDone': serializer.toJson<bool>(isDone),
     };
@@ -1397,14 +1402,14 @@ class Task extends DataClass implements Insertable<Task> {
     int? id,
     int? stageId,
     String? title,
-    Value<String?> note = const Value.absent(),
+    int? relativeDays,
     Value<DateTime?> dueDate = const Value.absent(),
     bool? isDone,
   }) => Task(
     id: id ?? this.id,
     stageId: stageId ?? this.stageId,
     title: title ?? this.title,
-    note: note.present ? note.value : this.note,
+    relativeDays: relativeDays ?? this.relativeDays,
     dueDate: dueDate.present ? dueDate.value : this.dueDate,
     isDone: isDone ?? this.isDone,
   );
@@ -1413,7 +1418,9 @@ class Task extends DataClass implements Insertable<Task> {
       id: data.id.present ? data.id.value : this.id,
       stageId: data.stageId.present ? data.stageId.value : this.stageId,
       title: data.title.present ? data.title.value : this.title,
-      note: data.note.present ? data.note.value : this.note,
+      relativeDays: data.relativeDays.present
+          ? data.relativeDays.value
+          : this.relativeDays,
       dueDate: data.dueDate.present ? data.dueDate.value : this.dueDate,
       isDone: data.isDone.present ? data.isDone.value : this.isDone,
     );
@@ -1425,7 +1432,7 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('id: $id, ')
           ..write('stageId: $stageId, ')
           ..write('title: $title, ')
-          ..write('note: $note, ')
+          ..write('relativeDays: $relativeDays, ')
           ..write('dueDate: $dueDate, ')
           ..write('isDone: $isDone')
           ..write(')'))
@@ -1433,7 +1440,8 @@ class Task extends DataClass implements Insertable<Task> {
   }
 
   @override
-  int get hashCode => Object.hash(id, stageId, title, note, dueDate, isDone);
+  int get hashCode =>
+      Object.hash(id, stageId, title, relativeDays, dueDate, isDone);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1441,7 +1449,7 @@ class Task extends DataClass implements Insertable<Task> {
           other.id == this.id &&
           other.stageId == this.stageId &&
           other.title == this.title &&
-          other.note == this.note &&
+          other.relativeDays == this.relativeDays &&
           other.dueDate == this.dueDate &&
           other.isDone == this.isDone);
 }
@@ -1450,14 +1458,14 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<int> id;
   final Value<int> stageId;
   final Value<String> title;
-  final Value<String?> note;
+  final Value<int> relativeDays;
   final Value<DateTime?> dueDate;
   final Value<bool> isDone;
   const TasksCompanion({
     this.id = const Value.absent(),
     this.stageId = const Value.absent(),
     this.title = const Value.absent(),
-    this.note = const Value.absent(),
+    this.relativeDays = const Value.absent(),
     this.dueDate = const Value.absent(),
     this.isDone = const Value.absent(),
   });
@@ -1465,16 +1473,17 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.id = const Value.absent(),
     required int stageId,
     required String title,
-    this.note = const Value.absent(),
+    required int relativeDays,
     this.dueDate = const Value.absent(),
     this.isDone = const Value.absent(),
   }) : stageId = Value(stageId),
-       title = Value(title);
+       title = Value(title),
+       relativeDays = Value(relativeDays);
   static Insertable<Task> custom({
     Expression<int>? id,
     Expression<int>? stageId,
     Expression<String>? title,
-    Expression<String>? note,
+    Expression<int>? relativeDays,
     Expression<DateTime>? dueDate,
     Expression<bool>? isDone,
   }) {
@@ -1482,7 +1491,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (id != null) 'id': id,
       if (stageId != null) 'stage_id': stageId,
       if (title != null) 'title': title,
-      if (note != null) 'note': note,
+      if (relativeDays != null) 'relative_days': relativeDays,
       if (dueDate != null) 'due_date': dueDate,
       if (isDone != null) 'is_done': isDone,
     });
@@ -1492,7 +1501,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<int>? id,
     Value<int>? stageId,
     Value<String>? title,
-    Value<String?>? note,
+    Value<int>? relativeDays,
     Value<DateTime?>? dueDate,
     Value<bool>? isDone,
   }) {
@@ -1500,7 +1509,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       id: id ?? this.id,
       stageId: stageId ?? this.stageId,
       title: title ?? this.title,
-      note: note ?? this.note,
+      relativeDays: relativeDays ?? this.relativeDays,
       dueDate: dueDate ?? this.dueDate,
       isDone: isDone ?? this.isDone,
     );
@@ -1518,8 +1527,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (note.present) {
-      map['note'] = Variable<String>(note.value);
+    if (relativeDays.present) {
+      map['relative_days'] = Variable<int>(relativeDays.value);
     }
     if (dueDate.present) {
       map['due_date'] = Variable<DateTime>(dueDate.value);
@@ -1536,7 +1545,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('id: $id, ')
           ..write('stageId: $stageId, ')
           ..write('title: $title, ')
-          ..write('note: $note, ')
+          ..write('relativeDays: $relativeDays, ')
           ..write('dueDate: $dueDate, ')
           ..write('isDone: $isDone')
           ..write(')'))
@@ -2925,7 +2934,7 @@ typedef $$TasksTableCreateCompanionBuilder =
       Value<int> id,
       required int stageId,
       required String title,
-      Value<String?> note,
+      required int relativeDays,
       Value<DateTime?> dueDate,
       Value<bool> isDone,
     });
@@ -2934,7 +2943,7 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<int> id,
       Value<int> stageId,
       Value<String> title,
-      Value<String?> note,
+      Value<int> relativeDays,
       Value<DateTime?> dueDate,
       Value<bool> isDone,
     });
@@ -2980,8 +2989,8 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get note => $composableBuilder(
-    column: $table.note,
+  ColumnFilters<int> get relativeDays => $composableBuilder(
+    column: $table.relativeDays,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3038,8 +3047,8 @@ class $$TasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get note => $composableBuilder(
-    column: $table.note,
+  ColumnOrderings<int> get relativeDays => $composableBuilder(
+    column: $table.relativeDays,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3092,8 +3101,10 @@ class $$TasksTableAnnotationComposer
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
 
-  GeneratedColumn<String> get note =>
-      $composableBuilder(column: $table.note, builder: (column) => column);
+  GeneratedColumn<int> get relativeDays => $composableBuilder(
+    column: $table.relativeDays,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get dueDate =>
       $composableBuilder(column: $table.dueDate, builder: (column) => column);
@@ -3156,14 +3167,14 @@ class $$TasksTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<int> stageId = const Value.absent(),
                 Value<String> title = const Value.absent(),
-                Value<String?> note = const Value.absent(),
+                Value<int> relativeDays = const Value.absent(),
                 Value<DateTime?> dueDate = const Value.absent(),
                 Value<bool> isDone = const Value.absent(),
               }) => TasksCompanion(
                 id: id,
                 stageId: stageId,
                 title: title,
-                note: note,
+                relativeDays: relativeDays,
                 dueDate: dueDate,
                 isDone: isDone,
               ),
@@ -3172,14 +3183,14 @@ class $$TasksTableTableManager
                 Value<int> id = const Value.absent(),
                 required int stageId,
                 required String title,
-                Value<String?> note = const Value.absent(),
+                required int relativeDays,
                 Value<DateTime?> dueDate = const Value.absent(),
                 Value<bool> isDone = const Value.absent(),
               }) => TasksCompanion.insert(
                 id: id,
                 stageId: stageId,
                 title: title,
-                note: note,
+                relativeDays: relativeDays,
                 dueDate: dueDate,
                 isDone: isDone,
               ),

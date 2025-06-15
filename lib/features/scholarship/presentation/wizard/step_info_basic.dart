@@ -49,7 +49,10 @@ class StepInfoBasic extends ConsumerWidget {
                     lastDate: now.add(const Duration(days: 730)),
                     initialDate: form.deadline ?? now,
                   );
-                  if (picked != null) notifier.setDeadline(picked);
+                  if (picked != null){
+                    notifier.setDeadline(picked);
+                    print('Deadline set to: ${picked.toIso8601String()}');
+                  } 
                 },
               ),
             ],

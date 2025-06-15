@@ -54,9 +54,13 @@ class Tasks extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get stageId => integer().references(Stages, #id)();
   TextColumn get title => text()();
-  TextColumn get note => text().nullable()();
-  DateTimeColumn get dueDate => dateTime().nullable()();
-  BoolColumn get isDone => boolean().withDefault(const Constant(false))();
+
+  /* BARU */
+  IntColumn get relativeDays => integer()(); // ± hari dari deadline beasiswa
+
+  DateTimeColumn get dueDate => dateTime().nullable()(); // opsional ketika dihitung
+  BoolColumn get isDone =>
+      boolean().withDefault(const Constant(false))();
 }
 
 // 5. requirements (checklist)

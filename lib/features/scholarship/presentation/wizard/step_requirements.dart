@@ -25,6 +25,7 @@ class StepRequirements extends ConsumerWidget {
                     labelText: 'Tambah persyaratan',
                   ),
                   onSubmitted: (v) {
+                    print('Submitted requirement: $v');
                     notifier.addRequirement(v);
                     inputCtrl.clear();
                   },
@@ -33,6 +34,7 @@ class StepRequirements extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
+                  print('Adding requirement: ${inputCtrl.text}');
                   notifier.addRequirement(inputCtrl.text);
                   inputCtrl.clear();
                 },
@@ -45,10 +47,14 @@ class StepRequirements extends ConsumerWidget {
               itemCount: form.requirements.length,
               onReorder: (oldIdx, newIdx) {
                 final list = [...form.requirements];
+                if (list.isEmpty) return; // Pastikan list tidak kosong
+                if (oldIdx < 0 || oldIdx >= list.length) return; // validasi indeks lama
+                if (newIdx < 0 || newIdx > list.length) return; // validasi indeks baru
+
                 if (newIdx > oldIdx) newIdx--;
                 final item = list.removeAt(oldIdx);
                 list.insert(newIdx, item);
-                notifier.state = notifier.state..requirements = list;
+                notifier.updateRequirements(list);
               },
               itemBuilder: (c, i) => ListTile(
                 key: ValueKey('req_$i'),
