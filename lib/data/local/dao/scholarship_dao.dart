@@ -6,7 +6,7 @@ part 'scholarship_dao.g.dart';
 @DriftAccessor(tables: [Scholarships, Stages, Tasks, Requirements])
 class ScholarshipDao extends DatabaseAccessor<AppDatabase>
     with _$ScholarshipDaoMixin {
-  ScholarshipDao(AppDatabase db) : super(db);
+  ScholarshipDao(super.db);
 
   // READ
   Stream<List<Scholarship>> watchAll() =>

@@ -8,3 +8,4 @@ final dashboardCountsProvider = FutureProvider<int>((ref) async {
   final list = await dao.watchAll().first;
   return list.length; // jumlah beasiswa
 });
+
