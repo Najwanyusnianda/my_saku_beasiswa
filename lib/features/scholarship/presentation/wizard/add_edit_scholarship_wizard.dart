@@ -1,8 +1,16 @@
 // lib/features/scholarship/presentation/wizard/add_edit_scholarship_wizard.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'step_template_select.dart';
+import 'package:drift/drift.dart';
+import 'package:my_saku_beasiswa/features/scholarship/application/add_form_provider.dart';
+import '../../../../core/providers.dart';
+// import app_database.dart';
+import '../../../../data/local/app_database.dart';
 
+
+//import step form
+import 'step_template_select.dart';
+import 'step_info_basic.dart';
 class AddEditScholarshipWizard extends ConsumerStatefulWidget {
   const AddEditScholarshipWizard({super.key});
 
@@ -14,23 +22,47 @@ class AddEditScholarshipWizard extends ConsumerStatefulWidget {
 class _AddEditScholarshipWizardState
     extends ConsumerState<AddEditScholarshipWizard> {
   final _pageCtrl = PageController();
+  int _page = 0;
 
   void _next() => _pageCtrl.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
+  
+  Future<void> _save() async {
+    final form = ref.read(addScholarshipFormProvider);
+    final dao  = ref.read(scholarshipDaoProvider);
+
+    await dao.insertScholarship(ScholarshipsCompanion.insert(
+      name: form.name,
+      provider: form.provider,
+      deadline: form.deadline!,
+      templateId: Value(form.templateId),
+    ));
+    if (mounted) Navigator.pop(context); // kembali Dashboard
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageCtrl.addListener(() {
+      final idx = _pageCtrl.page?.round() ?? 0;
+      if (idx != _page) setState(() => _page = idx);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final titles = ['Pilih Template', 'Info Dasar', 'Persyaratan', 'Tahapan', 'Simpan'];
     return Scaffold(
-      appBar: AppBar(title: const Text('Beasiswa Baru (1/5)')),
+      appBar: AppBar(title: Text('${titles[_page]} (${_page + 1}/5)')),
       body: PageView(
         controller: _pageCtrl,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          StepTemplateSelect(onNext: _next), // STEP 1
-          const Placeholder(),               // STEP 2 dikerjakan nanti
-          const Placeholder(),
+          StepTemplateSelect(onNext: _next),
+          StepInfoBasic(onNext: _save), // untuk v1, selesai di sini
+          const Placeholder(),          // Step 3–5 nanti
           const Placeholder(),
           const Placeholder(),
         ],

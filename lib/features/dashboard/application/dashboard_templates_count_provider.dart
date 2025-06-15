@@ -7,3 +7,4 @@ final templateCountProvider = FutureProvider<int>((ref) async {
   final list = await dao.getCachedTemplates();
   return list.length;
 });
+

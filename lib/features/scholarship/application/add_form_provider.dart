@@ -25,3 +25,10 @@ class AddScholarshipFormNotifier extends StateNotifier<AddScholarshipForm> {
   void setProvider(String v) => state = state..provider = v;
   void setDeadline(DateTime d) => state = state..deadline = d;
 }
+
+extension AddFormX on AddScholarshipForm {
+  bool get isStep2Valid =>
+      name.trim().isNotEmpty &&
+      provider.trim().isNotEmpty &&
+      deadline != null;
+}

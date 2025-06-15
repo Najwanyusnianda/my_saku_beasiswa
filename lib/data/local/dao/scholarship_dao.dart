@@ -20,4 +20,6 @@ class ScholarshipDao extends DatabaseAccessor<AppDatabase>
   Future<void> updateStatus(int id, String status) =>
       (update(scholarships)..where((tbl) => tbl.id.equals(id)))
           .write(ScholarshipsCompanion(status: Value(status)));
+  
+  
 }
